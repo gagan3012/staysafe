@@ -53,3 +53,4 @@ def get_hand_hist():
             dst = cv2.calcBackProject([hsv], [0, 1], hist, [0, 180, 0, 256], 1)
             dst1 = dst.copy()
             disc = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (10, 10))
+            cv2.filter2D(dst, -1, disc, dst)
