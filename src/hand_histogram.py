@@ -47,3 +47,4 @@ def get_hand_hist():
             hist = cv2.calcHist([hsvCrop], [0, 1], None, [180, 256], [0, 180, 0, 256])
             cv2.normalize(hist, hist, 0, 255, cv2.NORM_MINMAX)
         elif keypress == ord('s'):
+            flagPressedS = True
