@@ -34,3 +34,4 @@ def get_hand_hist():
     x, y, w, h = 300, 100, 300, 300
     flagPressedC, flagPressedS = False, False
     imgCrop = None
+    while True:
