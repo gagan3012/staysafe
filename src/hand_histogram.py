@@ -35,3 +35,4 @@ def get_hand_hist():
     flagPressedC, flagPressedS = False, False
     imgCrop = None
     while True:
+        img = cam.read()[1]
