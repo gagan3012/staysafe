@@ -70,3 +70,4 @@ def get_hand_hist():
         pickle.dump(hist, f)
 
 if __name__ == "__main__":
+    get_hand_hist()
