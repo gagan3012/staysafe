@@ -51,3 +51,4 @@ def get_hand_hist():
             break
         if flagPressedC:
             dst = cv2.calcBackProject([hsv], [0, 1], hist, [0, 180, 0, 256], 1)
+            dst1 = dst.copy()
