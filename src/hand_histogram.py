@@ -48,3 +48,4 @@ def get_hand_hist():
             cv2.normalize(hist, hist, 0, 255, cv2.NORM_MINMAX)
         elif keypress == ord('s'):
             flagPressedS = True
+        if flagPressedC:
