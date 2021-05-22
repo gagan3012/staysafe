@@ -26,3 +26,4 @@ def build_squares(img):
         y += h + d
     return crop
 
+
