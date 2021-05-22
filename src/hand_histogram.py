@@ -61,3 +61,4 @@ def get_hand_hist():
             # cv2.imshow("res", res)
             cv2.imshow("Thresh", thresh)
         if not flagPressedS:
+        # cv2.rectangle(img, (x,y), (x+w, y+h), (0,255,0), 2)
