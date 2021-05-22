@@ -16,4 +16,5 @@ def pickle_images_labels():
 		img = cv2.imread(image, 0)
 		images_labels.append((np.array(img, dtype=np.uint8), int(label)))
 	return images_labels
+
 images_labels = pickle_images_labels()
