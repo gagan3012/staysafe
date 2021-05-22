@@ -28,3 +28,4 @@ def build_squares(img):
 
 
 def get_hand_hist():
+    cam = cv2.VideoCapture(1)
