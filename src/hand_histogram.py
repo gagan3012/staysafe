@@ -63,3 +63,4 @@ def get_hand_hist():
         if not flagPressedS:
             imgCrop = build_squares(img)
         # cv2.rectangle(img, (x,y), (x+w, y+h), (0,255,0), 2)
+    cv2.destroyAllWindows()
