@@ -36,3 +36,4 @@ def get_hand_hist():
     imgCrop = None
     while True:
         img = cam.read()[1]
+        img = cv2.flip(img, 1)
