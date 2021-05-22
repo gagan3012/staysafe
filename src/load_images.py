@@ -15,3 +15,4 @@ def pickle_images_labels():
 		label = image[image.find(os.sep)+1: image.rfind(os.sep)]
 		img = cv2.imread(image, 0)
 		images_labels.append((np.array(img, dtype=np.uint8), int(label)))
+	return images_labels
