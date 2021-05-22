@@ -69,5 +69,6 @@ def get_hand_hist():
     with open("hist", "wb") as f:
         pickle.dump(hist, f)
 
+
 if __name__ == "__main__":
     get_hand_hist()
