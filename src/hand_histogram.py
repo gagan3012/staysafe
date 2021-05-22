@@ -68,3 +68,4 @@ def get_hand_hist():
     cv2.destroyAllWindows()
     with open("hist", "wb") as f:
         pickle.dump(hist, f)
+
