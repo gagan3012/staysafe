@@ -60,3 +60,4 @@ def get_hand_hist():
             thresh = cv2.merge((thresh, thresh, thresh))
             # cv2.imshow("res", res)
             cv2.imshow("Thresh", thresh)
+        if not flagPressedS:
