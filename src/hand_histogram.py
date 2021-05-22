@@ -27,3 +27,4 @@ def build_squares(img):
     return crop
 
 
+def get_hand_hist():
