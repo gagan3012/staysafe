@@ -57,3 +57,4 @@ def get_hand_hist():
             blur = cv2.GaussianBlur(dst, (11, 11), 0)
             blur = cv2.medianBlur(blur, 15)
             ret, thresh = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+            thresh = cv2.merge((thresh, thresh, thresh))
