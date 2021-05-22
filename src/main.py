@@ -334,6 +334,7 @@ def recognize():
         else:
             break
 
+
 if __name__ == "__main__":
     keras_predict(model, np.zeros((50, 50), dtype=np.uint8))
     recognize()
