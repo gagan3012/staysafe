@@ -42,3 +42,4 @@ def get_hand_hist():
 
         keypress = cv2.waitKey(1)
         if keypress == ord('c'):
+            hsvCrop = cv2.cvtColor(imgCrop, cv2.COLOR_BGR2HSV)
