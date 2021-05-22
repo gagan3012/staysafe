@@ -47,7 +47,7 @@ def store_images(g_id):
     total_pics = 1200
     hist = get_hand_hist()
     cam = cv2.VideoCapture(1)
-    if cam.read()[0] == False:
+    if not cam.read()[0]:
         cam = cv2.VideoCapture(0)
     x, y, w, h = 300, 100, 300, 300
 
@@ -96,12 +96,12 @@ def store_images(g_id):
         cv2.imshow("thresh", thresh)
         keypress = cv2.waitKey(1)
         if keypress == ord('c'):
-            if flag_start_capturing == False:
+            if not flag_start_capturing:
                 flag_start_capturing = True
             else:
                 flag_start_capturing = False
                 frames = 0
-        if flag_start_capturing == True:
+        if flag_start_capturing:
             frames += 1
         if pic_no == total_pics:
             break
