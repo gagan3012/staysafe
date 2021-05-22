@@ -39,3 +39,4 @@ def get_hand_hist():
         img = cv2.flip(img, 1)
         img = cv2.resize(img, (640, 480))
         hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
