@@ -106,9 +106,9 @@ def store_images(g_id):
         if pic_no == total_pics:
             break
 
-
-init_create_folder_database()
-g_id = input("Enter gesture no.: ")
-g_name = input("Enter gesture name/text: ")
-store_in_db(g_id, g_name)
-store_images(g_id)
+if __name__ == "__main__":
+    init_create_folder_database()
+    g_id = input("Enter gesture no.: ")
+    g_name = input("Enter gesture name/text: ")
+    store_in_db(g_id, g_name)
+    store_images(g_id)
