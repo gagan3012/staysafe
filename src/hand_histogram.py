@@ -64,4 +64,5 @@ def get_hand_hist():
             imgCrop = build_squares(img)
         # cv2.rectangle(img, (x,y), (x+w, y+h), (0,255,0), 2)
         cv2.imshow("Set hand histogram", img)
+    cam.release()
     cv2.destroyAllWindows()
