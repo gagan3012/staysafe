@@ -10,7 +10,7 @@ This happens primarily because of the embarrassment of reporting. But what if th
 
 ### Presenting StaySafe!!
 
-Stay safe allows everyone to report harassment to the authorities and removes the embarrasment part of reporting.
+Stay safe allows everyone to report harassment to the authorities and removes the embarrassing part of reporting.
 
 Using StaySafe can also reduce the delay time between crime and report. This promotes workplace safety!
 
