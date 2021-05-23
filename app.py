@@ -7,12 +7,14 @@ import argparse
 import time
 from flask import jsonify
 import autocomplete
+import torch.nn.functional as F
 
+from model import Net
 import cv2
 import numpy as np
 import torch
 
-model = torch.load('model_trained.pt')
+model = torch.load('models/model_trained.pt')
 model.eval()
 
 signs = {'0': 'A', '1': 'B', '2': 'C', '3': 'D', '4': 'E', '5': 'F', '6': 'G', '7': 'H', '8': 'I',
@@ -55,7 +57,7 @@ def detect_gesture(frameCount):
 
         out = model(res1)
         probs, label = torch.topk(out, 25)
-        probs = torch.nn.functional.softmax(probs, 1)
+        probs = F.softmax(probs, 1)
 
         pred = out.max(1, keepdim=True)[1]
 
