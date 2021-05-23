@@ -1,159 +1,191 @@
-import av
-import cv2
-from keras.models import model_from_json
-from string import ascii_uppercase
-import numpy as np
-import operator
-import os
-import streamlit as st
-from PIL import Image
+from imutils.video import VideoStream
+from flask import Response, request
+from flask import Flask
+from flask import render_template
+import threading
+import argparse
 import time
-from streamlit_webrtc import (
-    ClientSettings,
-    VideoTransformerBase,
-    WebRtcMode,
-    webrtc_streamer,
-)
+from flask import jsonify
+import autocomplete
 
-WEBRTC_CLIENT_SETTINGS = ClientSettings(
-    rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]},
-    media_stream_constraints={"video": True, "audio": True},
-)
+import cv2
+import numpy as np
+import torch
 
+model = torch.load('model_trained.pt')
+model.eval()
 
-def main():
-    st.header("Sign Language Recognition using CNN")
-    sign_to_text = "Real time gesture detection"
-    loopback_page = "Simple video loopback (sendrecv)"
+signs = {'0': 'A', '1': 'B', '2': 'C', '3': 'D', '4': 'E', '5': 'F', '6': 'G', '7': 'H', '8': 'I',
+         '10': 'K', '11': 'L', '12': 'M', '13': 'N', '14': 'O', '15': 'P', '16': 'Q', '17': 'R',
+         '18': 'S', '19': 'T', '20': 'U', '21': 'V', '22': 'W', '23': 'X', '24': 'Y'}
 
-    app_mode = st.sidebar.selectbox(
-        "Choose app mode",
-        [sign_to_text,
-         loopback_page],
-    )
-    st.subheader(app_mode)
-    if app_mode == sign_to_text:
-        app_sign_to_text()
-    elif app_mode == loopback_page:
-        app_loopback()
+autocomplete.load()
+
+outputFrame = None
+lock = threading.Lock()
+trigger_flag = False
+full_sentence = ''
+text_suggestion = ''
+
+app = Flask(__name__)
+
+vc = VideoStream(src=0).start()
+time.sleep(2.0)
 
 
-#  Mode 1
+def detect_gesture(frameCount):
+    global vc, outputFrame, lock, trigger_flag, full_sentence, text_suggestion
 
-def app_sign_to_text():
-    class Predictions(VideoTransformerBase):
-        def __init__(self) -> None:
+    while True:
+        frame = vc.read()
 
-            self.json_file = open("models/model.json", "r")
-            self.model_json = self.json_file.read()
-            self.json_file.close()
-            self.model = model_from_json(self.model_json)
-            self.model.load_weights("models/model.h5")
-            self.image_x = 128
-            self.image_y = 128
+        width = 700
+        height = 480
 
-            self.ct = {'blank': 0}
-            self.blank_flag = 0
-            for i in ascii_uppercase:
-                self.ct[i] = 0
-            self.sentence = ""
-            self.word = ""
-            self.current_symbol = "Empty"
+        frame = cv2.resize(frame, (width, height))
 
-        def transform(self, frame: av.VideoFrame) -> np.ndarray:
-            img = frame.to_ndarray(format="bgr24")
-            img = cv2.flip(img, 1)
-            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            gray_crop = gray[50:250, 400:600]
-            blur = cv2.GaussianBlur(gray_crop, (5, 5), 2)
-            th3 = cv2.adaptiveThreshold(blur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
-            ret, res = cv2.threshold(th3, 70, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-            self.signPrediction(res)
-            cv2.rectangle(img, (400, 50), (600, 250), (0, 0, 255), 5)
-            cv2.putText(img, self.current_symbol, (380, 90), cv2.FONT_HERSHEY_SIMPLEX, 1.9, (255, 0, 0), 2)
-            cv2.putText(img, "Word->" + self.word, (10, 290), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-            cv2.putText(img, "Sentence->" + self.sentence, (10, 390), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-            return img
+        img = frame[20:250, 20:250]
 
-        def signPrediction(self, res):
-            img2 = res.copy()
-            img2 = cv2.resize(img2, (self.image_x, self.image_y))
-            img2 = np.array(img2, dtype=np.float32)
-            img2 = np.reshape(img2, (1, self.image_x, self.image_y, 1))
+        res = cv2.resize(img, dsize=(28, 28), interpolation=cv2.INTER_CUBIC)
+        res = cv2.cvtColor(res, cv2.COLOR_BGR2GRAY)
 
-            result = self.model.predict(img2)
-            prediction = {}
-            inde = 1
-            prediction['blank'] = result[0][0]
-            for i in ascii_uppercase:
-                prediction[i] = result[0][inde]
-                inde += 1
+        res1 = np.reshape(res, (1, 1, 28, 28)) / 255
+        res1 = torch.from_numpy(res1)
+        res1 = res1.type(torch.FloatTensor)
 
-            prediction = sorted(prediction.items(), key=operator.itemgetter(1), reverse=True)
-            self.current_symbol = prediction[0][0]
-            if self.current_symbol == 'blank':
-                for i in ascii_uppercase:
-                    self.ct[i] = 0
-            self.ct[self.current_symbol] += 1
-            if self.ct[self.current_symbol] > 45:
-                for i in ascii_uppercase:
-                    if i == self.current_symbol:
-                        continue
-                    tmp = self.ct[self.current_symbol] - self.ct[i]
-                    if tmp < 0:
-                        tmp *= -1
-                    if tmp <= 5:
-                        self.ct['blank'] = 0
-                        for i in ascii_uppercase:
-                            self.ct[i] = 0
-                        return
-                self.ct['blank'] = 0
-                for i in ascii_uppercase:
-                    self.ct[i] = 0
-                if self.current_symbol == 'blank':
-                    if self.blank_flag == 0:
-                        self.blank_flag = 1
-                        if len(self.sentence) > 0:
-                            self.sentence += " "
-                        self.sentence += self.word
-                        self.word = ""
-                else:
-                    self.blank_flag = 0
-                    self.word += self.current_symbol
+        out = model(res1)
+        probs, label = torch.topk(out, 25)
+        probs = torch.nn.functional.softmax(probs, 1)
 
-        # return prediction[0][0]
+        pred = out.max(1, keepdim=True)[1]
 
-    pred = Predictions()
-    webrtc_ctx = webrtc_streamer(
-        key="object-detection",
-        mode=WebRtcMode.SENDRECV,
-        client_settings=WEBRTC_CLIENT_SETTINGS,
-        video_transformer_factory=Predictions,
-        async_transform=True,
-    )
+        if float(probs[0, 0]) < 0.4:
+            detected = 'Nothing detected'
+        else:
+            detected = signs[str(int(pred))] + ': ' + '{:.2f}'.format(float(probs[0, 0])) + '%'
+
+        if trigger_flag:
+            full_sentence += signs[str(int(pred))].lower()
+            trigger_flag = False
+
+        if text_suggestion != '':
+            if text_suggestion == ' ':
+                full_sentence += ' '
+                text_suggestion = ''
+            else:
+                full_sentence_list = full_sentence.strip().split()
+                if (len(full_sentence_list) != 0):
+                    full_sentence_list.pop()
+                full_sentence_list.append(text_suggestion)
+                full_sentence = ' '.join(full_sentence_list)
+                full_sentence += ' '
+                text_suggestion = ''
+
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        frame = cv2.putText(frame, detected, (60, 285), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
+
+        frame = cv2.rectangle(frame, (20, 20), (250, 250), (0, 255, 0), 3)
+
+        with lock:
+            outputFrame = frame.copy()
 
 
-# MODE 2
-def play_image(char):
-    path = "images"
-    p1 = "gestures"
-    if (char == " "):
-        final = os.path.join(path, p1, "0.jpg")
+def generate():
+    global outputFrame, lock
+    while True:
+        with lock:
+            if outputFrame is None:
+                continue
+            (flag, encodedImage) = cv2.imencode(".jpg", outputFrame)
+
+            if not flag:
+                continue
+
+        yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' +
+               bytearray(encodedImage) + b'\r\n')
+
+
+def get_suggestion(prev_word='my', next_semi_word='na'):
+    global full_sentence
+    separated = full_sentence.strip().split(' ')
+
+    print(separated)
+
+    if len(separated) == 0:
+        return ['i', 'me', 'the', 'my', 'there']
+    elif len(separated) == 1:
+        suggestions = autocomplete.predict(full_sentence, '')[:5]
+    elif len(separated) >= 2:
+        first = ''
+        second = ''
+
+        first = separated[-2]
+        second = separated[-1]
+
+        suggestions = autocomplete.predict(first, second)[:5]
+
+    return [word[0] for word in suggestions]
+
+
+@app.route("/")
+def index():
+    return render_template("index.html")
+
+
+@app.route('/char')
+def char():
+    global text_suggestion
+    recommended = get_suggestion()
+    option = request.args.get('character')
+    if (option == 'space'):
+        text_suggestion = " "
     else:
-        final = os.path.join(path, p1, char + ".jpg")
-    # print(final)
-    gesture = Image.open(final)
-    return gesture
-
-#    Mode 3
-def app_loopback():
-    webrtc_streamer(
-        key="loopback",
-        mode=WebRtcMode.SENDRECV,
-        client_settings=WEBRTC_CLIENT_SETTINGS,
-        video_transformer_factory=None,  # NoOp
-    )
+        text_suggestion = recommended[int(option) - 1]
+    print(text_suggestion)
+    return Response("done")
 
 
-if __name__ == "__main__":
-    main()
+@app.route('/trigger')
+def trigger():
+    global trigger_flag
+    trigger_flag = True
+    return Response('done')
+
+
+@app.route("/video_feed")
+def video_feed():
+    return Response(generate(),
+                    mimetype="multipart/x-mixed-replace; boundary=frame")
+
+
+@app.route('/suggestions')
+def suggestion():
+    suggestions = get_suggestion()
+    return jsonify(suggestions)
+
+
+@app.route('/sentence')
+def sentence():
+    global full_sentence
+    return jsonify(full_sentence)
+
+
+if __name__ == '__main__':
+    ap = argparse.ArgumentParser()
+    ap.add_argument("-i", "--ip", type=str, required=True,
+                    help="ip address of the device")
+    ap.add_argument("-o", "--port", type=int, required=True,
+                    help="ephemeral port number of the server (1024 to 65535)")
+    ap.add_argument("-f", "--frame-count", type=int, default=32,
+                    help="# of frames used to construct the background model")
+    args = vars(ap.parse_args())
+
+    t = threading.Thread(target=detect_gesture, args=(
+        args["frame_count"],))
+    t.daemon = True
+    t.start()
+
+    app.run(host=args["ip"], port=args["port"], debug=True,
+            threaded=True, use_reloader=False)
+
+vc.stop()
