@@ -113,6 +113,8 @@ def get_suggestion(prev_word='my', next_semi_word='na'):
 
     print(separated)
 
+    list_or = ["Crisis Services Canada", "Hope for Wellness", "Kids Help Phone", "Canadian Mental Health Association"]
+
     if len(separated) == 0:
         return ['i', 'me', 'the', 'my', 'there']
     elif len(separated) == 1:
@@ -126,7 +128,7 @@ def get_suggestion(prev_word='my', next_semi_word='na'):
 
         suggestions = autocomplete.predict(first, second)[:5]
 
-    return [word[0] for word in suggestions]
+    return [word for word in list_or]
 
 
 @app.route("/")
@@ -139,7 +141,7 @@ def char():
     global text_suggestion
     recommended = get_suggestion()
     option = request.args.get('character')
-    if (option == 'space'):
+    if option == 'space':
         text_suggestion = " "
     else:
         text_suggestion = recommended[int(option) - 1]
