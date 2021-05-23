@@ -14,6 +14,7 @@ Stay safe allows everyone to report harassment to the authorities and removes th
 
 Using StaySafe can also reduce the delay time between crime and report. This promotes workplace safety!
 
+Youtube video: https://youtu.be/RsULWHqJpNk
 
 ### Model
 
