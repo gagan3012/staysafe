@@ -18,6 +18,8 @@ model = torch.load('models/model_trained.pt')
 model.eval()
 
 signs = {'0': 'A', '1': 'B', '2': 'C', '3': 'D', '4': 'E', '5': 'F', '6': 'G', '7': 'H', '8': 'I',
+         '10': 'K', '11': 'L', '12': 'M', '13': 'N', '14': 'O', '15': 'I need Help', '16': 'Q', '17': 'R',
+         '18': 'S', '19': 'T', '20': 'U', '21': 'V', '22': 'W', '23': 'I am Okay', '24': 'Y'}
 
 autocomplete.load()
 
@@ -65,6 +67,7 @@ def detect_gesture(frameCount):
             detected = signs[str(int(pred))] + ': ' + '{:.2f}'.format(float(probs[0, 0])) + '%'
 
         if trigger_flag:
+            full_sentence += signs[str(int(pred))]
             trigger_flag = False
 
         if text_suggestion != '':
@@ -73,6 +76,7 @@ def detect_gesture(frameCount):
                 text_suggestion = ''
             else:
                 full_sentence_list = full_sentence.strip().split()
+                if len(full_sentence_list) != 0:
                     full_sentence_list.pop()
                 full_sentence_list.append(text_suggestion)
                 full_sentence = ' '.join(full_sentence_list)
