@@ -60,3 +60,10 @@ Each training and test case represents a label (0-25) as a one-to-one map for ea
 
 **Note**: Right hand gestures are marked `safe` and Left hand gestures are marked `unsafe`!
 
+### Usage
+
+#### `I am okay` status
+![](images/Screenshot 2021-05-23 014047.png)
+
+#### `I need Help` Status
+![](images/Screenshot 2021-05-23 014417.png)
