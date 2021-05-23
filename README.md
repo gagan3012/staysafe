@@ -1,7 +1,6 @@
-# StaySafe
+#StaySafe
 
 ![1d80efd004b044e19368956446371821](https://user-images.githubusercontent.com/49101362/119253289-59589280-bb65-11eb-9c9f-749289c0d11d.png)
-
 
 Staying safe is very important in workplace setting. 
 
@@ -9,8 +8,49 @@ Staying safe is very important in workplace setting.
 
 This happens primarily because of the embarrassment of reporting. But what if there was a way to prevent this embarrassment and while simultaneously allow the authorities to check in with the person reporting!
 
-### Presenting StaySafe!!
+###Presenting StaySafe!!
 
-Stay safe allows everyone to report harassment to the authorities and removes the embaresset part of reporting.
+Stay safe allows everyone to report harassment to the authorities and removes the embarrasment part of reporting.
 
 Using StaySafe can also reduce the delay time between crime and report. This promotes workplace safety!
+
+
+### Model
+
+StaySafe uses a CNN model which has an accuracy of 99% and has been well tested! The model architecture is as follows:
+
+```
+----------------------------------------------------------------
+        Layer (type)               Output Shape         Param #
+================================================================
+            Conv2d-1           [-1, 80, 24, 24]           2,080
+       BatchNorm2d-2           [-1, 80, 24, 24]             160
+         MaxPool2d-3           [-1, 80, 12, 12]               0
+            Conv2d-4             [-1, 80, 8, 8]         160,080
+       BatchNorm2d-5             [-1, 80, 8, 8]             160
+         MaxPool2d-6             [-1, 80, 4, 4]               0
+            Linear-7                  [-1, 250]         320,250
+            Linear-8                   [-1, 25]           6,275
+================================================================
+Total params: 489,005
+Trainable params: 489,005
+Non-trainable params: 0
+```
+
+### Instructions to run
+
+
+The `requirements.txt` file should list all Python libraries that your notebooks
+depend on, and they will be installed using:
+
+```
+pip install -r requirements.txt
+```
+
+To run the web application:
+```
+python app.py -i 0.0.0.0 -o 8080
+```
+It will run your app on http://localhost:8080/
+
+
