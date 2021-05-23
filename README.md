@@ -10,10 +10,11 @@ This happens primarily because of the embarrassment of reporting. But what if th
 
 ### Presenting StaySafe!!
 
-Stay safe allows everyone to report harassment to the authorities and removes the embarrasment part of reporting.
+Stay safe allows everyone to report harassment to the authorities and removes the embarrassing part of reporting.
 
 Using StaySafe can also reduce the delay time between crime and report. This promotes workplace safety!
 
+Youtube video: https://youtu.be/RsULWHqJpNk
 
 ### Model
 
@@ -63,7 +64,7 @@ Each training and test case represents a label (0-25) as a one-to-one map for ea
 ### Usage
 
 #### `I am okay` status
-![](images/Screenshot 2021-05-23 014047.png)
+![](https://github.com/gagan3012/staysafe/blob/master/images/Screenshot%202021-05-23%20014047.png)
 
 #### `I need Help` Status
-![](images/Screenshot 2021-05-23 014417.png)
+![](https://github.com/gagan3012/staysafe/blob/master/images/Screenshot%202021-05-23%20014417.png)
