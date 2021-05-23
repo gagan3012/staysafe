@@ -63,7 +63,7 @@ Each training and test case represents a label (0-25) as a one-to-one map for ea
 ### Usage
 
 #### `I am okay` status
-![](images/Screenshot 2021-05-23 014047.png)
+![](https://github.com/gagan3012/staysafe/blob/master/images/Screenshot%202021-05-23%20014047.png)
 
 #### `I need Help` Status
-![](images/Screenshot 2021-05-23 014417.png)
+![](https://github.com/gagan3012/staysafe/blob/master/images/Screenshot%202021-05-23%20014417.png)
