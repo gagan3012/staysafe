@@ -1,4 +1,4 @@
-# staysafe
+#StaySafe
 
 Staying safe is very important in workplace setting. 
 
@@ -8,3 +8,8 @@ This happens primarily because of the embarrassment of reporting. But what if th
 
 ###Presenting StaySafe!!
 
+Stay safe allows everyone to report harassment to the authorities and removes the embaresset part of reporting.
+
+Using StaySafe can also reduce the delay time between crime and report. This promotes workplace safety!
+
+ 
