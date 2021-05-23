@@ -53,4 +53,8 @@ python app.py -i 0.0.0.0 -o 8080
 ```
 It will run your app on http://localhost:8080/
 
+### Dataset used
+Sign Language MNIST (https://www.kaggle.com/datamunge/sign-language-mnist)
+Each training and test case represents a label (0-25) as a one-to-one map for each alphabetic letter A-Z (and no cases for 9=J or 25=Z because of gesture motions).
+Note: Right hand gestures are marked `safe` and Left hand gestures are marked `unsafe`!
 
