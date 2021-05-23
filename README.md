@@ -8,7 +8,7 @@ Staying safe is very important in workplace setting.
 
 This happens primarily because of the embarrassment of reporting. But what if there was a way to prevent this embarrassment and while simultaneously allow the authorities to check in with the person reporting!
 
-###Presenting StaySafe!!
+### Presenting StaySafe!!
 
 Stay safe allows everyone to report harassment to the authorities and removes the embarrasment part of reporting.
 
